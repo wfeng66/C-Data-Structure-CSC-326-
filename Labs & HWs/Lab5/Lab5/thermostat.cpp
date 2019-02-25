@@ -16,7 +16,7 @@ thermostat::thermostat()
 // input: switch status, degree, the high threshold value, the low threshold value
 // return: noon
 // function: initialize members 
-thermostat::thermostat(bool s, int d, int h, int l)
+thermostat::thermostat(bool s = true, int d = 50, int h = 90, int l = 50)
 {
 	swit = s;
 	degree = d;
@@ -24,15 +24,16 @@ thermostat::thermostat(bool s, int d, int h, int l)
 	lowD = l;
 };
 
+
 // definition of set function
 // input: the degree need to set
 // return: noon
 // function: set the degree value as input value
 void thermostat::set(int dg)
 {
-	if (dg >= lowD && dg <= highD) {		// check if the required value is in operating range
-		if (swit == false) swit = true;		// if the switch status is off, turn it on 
-		degree = dg;
+	if (dg >= lowD && dg <= highD) {					// check if the required value is in operating range
+		if (!(this->checkSwi())) this->turnon();		// if the switch status is off, turn it on 
+		degree = dg;	
 		cout << "Setting sucess!" << endl;
 	}
 	else cout << "You input is beyond the scope of this thermostat, setting fale!" << endl;
@@ -45,12 +46,25 @@ void thermostat::set(int dg)
 // function: increase or decrease the degrees basing on current degree, increase the degree if the inpute is positive, decrease the degrees if the input is negative
 void thermostat::change(int ch)
 {
-	if (swit == false) {		// if the switch status is off, turn it on 
-		swit = true;
+	if (!(this->checkSwi())) {		// if the switch status is off, turn it on 
+		this->turnon();
 		cout << "The thermostat is turned on!" << endl;
 	}
 	if ((degree + ch) >= lowD && (degree + ch) <= highD) {		// check if the end degree is in the operating range
 		degree += ch;
+		cout << "Changing success!" << endl;
+	}
+	else cout << "You input is beyond the scope of this thermostat, changing fale!" << endl;
+}
+
+void thermostat::operator+(const int d)
+{
+	if (!(this->checkSwi())) {		// if the switch status is off, turn it on 
+		this->turnon();
+		cout << "The thermostat is turned on!" << endl;
+	}
+	if ((degree + d) >= lowD && (degree + d) <= highD) {		// check if the end degree is in the operating range
+		degree += d;
 		cout << "Changing success!" << endl;
 	}
 	else cout << "You input is beyond the scope of this thermostat, changing fale!" << endl;
