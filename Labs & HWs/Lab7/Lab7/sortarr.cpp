@@ -5,7 +5,7 @@ arr::arr() {}
 // the second constructor: initilizing the arrays, including read data from file
 // input: filename - the string of file name that includes source data; numD - the number of digits need to read from file, 
 //        that is indicated by user from console; bPos - the begining position of file where begin to read data, that is indicated by user from console; bPos
-// return: noon
+// return: none
 // output: inilizing 2 arrays
 arr::arr(string filename, int numD, int bPos)
 {
@@ -35,8 +35,8 @@ arr::arr(string filename, int numD, int bPos)
 }
 
 // destructor: release resources
-// input: noon
-// return: noon
+// input: none
+// return: none
 // output: release 2 arrays, close file
 arr::~arr() {
 	delete[] originalArr;
@@ -45,8 +45,8 @@ arr::~arr() {
 }
 
 // sort: sort the array, sortedArr 
-// input: noon
-// return: noon
+// input: none
+// return: none
 // output: unsorted array was sorted
 // algorithm: insertion sort
 void arr::sort()
@@ -64,8 +64,8 @@ void arr::sort()
 }
 
 // print: output the result 
-// input: noon
-// return: noon
+// input: none
+// return: none
 // output: cout original array and sorted array
 void arr::print()
 {
@@ -83,6 +83,10 @@ void arr::print()
 	cout << "\n";
 }
 
+// clear: find the repeated element in sortedArr, and get rid of it, making sure unique element in sortedArr
+// input: none
+// return: none
+// output: all of the emlements in sortedArr become unique
 void arr::clear()
 {
 	int prev = *sortedArr;
@@ -96,6 +100,10 @@ void arr::clear()
 	}
 }
 
+// delrepe: delete the repeated elements, and move subsequent elements forward
+// input: the position of repeated element need to remove
+// return: none
+// output: remove the element which is specific in parameter
 void arr::delrepe(int pos)
 {
 	for (int i = pos; i < numElements - 1; i++)
