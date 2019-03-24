@@ -7,7 +7,11 @@ template <class S>
 struct nodeType
 {
 	S info;
-	nodeType *link;
+	nodeType<S>* prev;
+	nodeType<S>* next;
+
+	nodeType() { next = prev = nullptr; }
+	nodeType(const S d, nodeType<S>* prv = nullptr, nodeType<S>* nxt = nullptr) :info(d), next(nxt), prev(prv){}
 };
 
 template <class S>
@@ -19,13 +23,16 @@ public:
 	bool isFull();
 	void initConsole();
 	void initFile(string, int, int);		// initializate the list from existing file, first int is the numbers of elements need to load, second int is the beginning position in the file
-	void append(nodeType<S>*);					// append the newnode to the end of the list
-	void del(nodeType<S>*);						// delete de
+	//void append(nodeType<S>*);					// append the newnode to the end of the list
+	void append(S);
+	void delCurr();						// delete current element
 	void insert(nodeType<S>*, nodeType<S>*);      // first parameter is the ptr of newnode, the second is the ptr of position you are going to put the newnode at it
-	int length();
 	void print();
-	void movefwr();
-	void movebkwr();
+	void setTohead();
+	void setTotail();
+	void movefwr(int);
+	void movebkwr(int);
+	void printCurr();
 	void swap(nodeType<S>*, nodeType<S>*);
 private:
 	int count;
@@ -57,6 +64,10 @@ int main()
 		//myArr->clear();
 		//myArr->print();
 		cout << "-----------------------------------------------------------------------------------" << endl << endl;
+		oriList.setTohead();
+		oriList.movefwr(2);
+		oriList.delCurr();
+		oriList.print();
 	}
 
 
@@ -86,11 +97,11 @@ void linkedlist<S>::initFile(string fname, int numD, int bPos)
 {
 	fstream inFile;
 	S tvar;
-	nodeType<S>* temp;
+	//nodeType<S>* temp;
 	inFile.open(fname, ios::in);
 
-	temp = new nodeType<S>;
-	temp->link = nullptr;
+	//temp = new nodeType<S>;
+	//temp->next = nullptr;
 	if (inFile.fail()) {					// execption
 		cout << "Openning fail!";
 	}
@@ -99,10 +110,10 @@ void linkedlist<S>::initFile(string fname, int numD, int bPos)
 		for (int t = 0; t < (bPos - 1); t++) inFile >> tvar;		// positioning in file; using seekg() will cause misplace because the length of digital is inconsistent
 		for (int i = 0; i < numD; i++) {						// load data from file to 2 arrays
 			if (!inFile.eof()) {
-				// inFile >> *(originalArr + i);
-				inFile >> temp->info;
-				cout << temp->info<<"\t";
-				this->append(temp);
+				//inFile >> temp->info;
+				//this->append(temp);
+				inFile >> tvar;
+				this->append(tvar);
 			}
 			else {							// execption
 				cout << "Data reading reached the end of the file, and stopped!";
@@ -121,22 +132,49 @@ bool linkedlist<S>::isEmpty()
 template <class S>
 bool linkedlist<S>::isFull()
 {
-	return(current->link == last);
+	return(current->next == last);
 }
 
 template <class S>
-void linkedlist<S>::append(nodeType<S>* newNode)
+void linkedlist<S>::append(S data)
 {
+	//cout << "info: " << newNode->info <<"\t"<< "link: " << newNode->next << "\n";
+	/*newNode->next = nullptr;
 	if (first == nullptr)
 	{
 		first = newNode;
 		last = newNode;
+		cout << first->info<<"\n";
 		count++;
 	}
 	else
 	{
-		last->link = newNode;
+		last->next = newNode;
 		last = newNode;
+		cout << first->info << "\t" << last->info << "\n";
+		count++;
+	}*/
+	nodeType<S>* newNode;
+	//newNode = new nodeType<S>;
+	//newNode->info = data;
+	//newNode->next = nullptr;
+	if (first == nullptr)
+	{
+		//nodeType<S> newNode(data);
+		newNode = new nodeType<S>(data);
+		first = newNode;
+		last = newNode;
+		cout << first->info << "\n";
+		count++;
+	}
+	else
+	{
+		//nodeType<S> newNode(data,current,nullptr);
+		newNode = new nodeType<S>(data, current, nullptr);
+		current = newNode;
+		last->next = newNode;
+		last = newNode;
+		cout << first->info << "\t" << last->info << "\n";
 		count++;
 	}
 }
@@ -144,10 +182,59 @@ void linkedlist<S>::append(nodeType<S>* newNode)
 template <class S>
 void linkedlist<S>::print()
 {
+
 	current = first;
-	while (current != nullptr)
-	{
+	//cout << current->info;
+	
+
+		while (current != nullptr)
+		{
 		cout << current->info << "\t";
-		current = current->link;
-	}
+		current = current->next;
+		}
+		cout << "\n"<< current;
+		
+
+}
+
+template <class S>
+void linkedlist<S>::setTohead()
+{
+	current = first;
+}
+
+template <class S>
+void linkedlist<S>::setTotail()
+{
+	current = last;
+}
+
+
+template <class S>
+void linkedlist<S>::movebkwr(int num)
+{
+	for (int i = 0; i < num;i++)
+		current = current->prev;
+}
+
+template <class S>
+void linkedlist<S>::movefwr(int num)
+{
+	for (int i = 0; i < num; i++)
+		current = current->next;
+}
+
+template <class S>
+void linkedlist<S>::printCurr()
+{
+	cout << current->info;
+}
+
+template <class S>
+void linkedlist<S>::delCurr()
+{
+	nodeType<S>* temp = current;
+	current->prev->next = current->next;
+	current->next->prev = current->prev;
+	current = current->next;
 }
