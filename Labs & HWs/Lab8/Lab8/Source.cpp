@@ -29,7 +29,7 @@ void DecToHex(int num)
 	int mod = num % 16;
 	if (num > 0)
 	{
-		DecToHex(num / 16);
+		DecToHex(num / 16);			
 		switch (mod)
 		{
 		case 10:
