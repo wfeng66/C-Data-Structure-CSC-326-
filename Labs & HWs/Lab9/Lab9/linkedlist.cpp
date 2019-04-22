@@ -1,81 +1,4 @@
-#include <iostream>
-#include<stdio.h> 
-#include<stdlib.h>
-#include <fstream>
-#include <string>
-using namespace std;
-
-template <class S>
-struct nodeType
-{
-	S info;
-	nodeType<S>* prev;
-	nodeType<S>* next;
-
-	nodeType() { next = prev = nullptr; }
-	nodeType(const S d, nodeType<S>* prv = nullptr, nodeType<S>* nxt = nullptr) :info(d), next(nxt), prev(prv) {}
-};
-
-template <class S>
-class linkedlist {
-public:
-	linkedlist();
-	~linkedlist();
-	bool isEmpty();
-	bool isFull();
-	void initConsole();
-	void initFile(string, int, int);				// initializate the list from existing file, first int is the numbers of elements need to load, second int is the beginning position in the file			
-	void append(S);									// append the newnode to the end of the list
-	void delCurr();									// delete current element
-	void print();
-	void setTohead();
-	void setTotail();
-	void movefwr(int);
-	void movebkwr(int);
-	void printCurr();
-	void swap(nodeType<S>*, nodeType<S>*);
-	void sort();
-	void delduplicate();
-
-private:
-	int count;
-	nodeType<S> *current;
-	nodeType<S> *first;
-	nodeType<S> *last;
-};
-
-
-int main()
-{
-	linkedlist<int> oriList;
-	linkedlist<int> orderedList;
-	int nD = 0, bP;
-	string fName = "data.txt";			// file name of data source
-	cout << "Welcome: \n\n";
-
-
-
-	while (nD != -1) {			// run continually until user input -1
-		cout << "Please input the number you want to sort (-1 means stop):  ";
-		cin >> nD;
-		cout << "\nAnd the begining position:  ";
-		cin >> bP;
-		oriList.initFile(fName, nD, bP);
-		orderedList = oriList;
-		oriList.print();
-		cout << "-----------------------------------------------------------------------------------" << endl << endl;
-		orderedList.sort();
-		orderedList.print();
-		orderedList.delduplicate();
-		orderedList.print();
-	}
-
-
-
-	system("pause");
-
-}
-
+#include "linkedlist.h"
 
 
 template <class S>
@@ -90,6 +13,10 @@ linkedlist<S>::linkedlist()
 template <class S>
 linkedlist<S>::~linkedlist()
 {
+	this->setTohead();
+	while (current != last){
+		this->delCurr();
+	}
 }
 
 template <class S>
@@ -124,11 +51,6 @@ bool linkedlist<S>::isEmpty()
 	return(first == nullptr);
 }
 
-template <class S>
-bool linkedlist<S>::isFull()
-{
-	return(current->next == last);
-}
 
 template <class S>
 void linkedlist<S>::append(S data)
@@ -225,7 +147,7 @@ void linkedlist<S>::sort()
 		while (current != last) {
 			if (current->info > current->next->info){
 				swap(current, current->next);
-			} 
+			}
 			this->movefwr(1);
 		}
 	}
@@ -235,11 +157,11 @@ template <class S>
 void linkedlist<S>::delduplicate()
 {
 	this->setTohead();
-		while (current != last) {
-			if (current->info == current->next->info){
-				this->delCurr();
-				this->movebkwr(1);
-			}
-			this->movefwr(1);
+	while (current != last) {
+		if (current->info == current->next->info){
+			this->delCurr();
+			this->movebkwr(1);
 		}
+		this->movefwr(1);
+	}
 }
